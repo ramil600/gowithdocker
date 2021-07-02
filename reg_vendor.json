@@ -1,0 +1,20 @@
+{
+	"instance": {
+		"instanceId": "WKS-SOF-L011",
+		"hostName": "WKS-SOF-L011",
+		"app": "vendor3",
+		"vipAddress": "com.automationrhapsody.eureka.app",
+		"secureVipAddress": "com.automationrhapsody.eureka.app",
+		"ipAddr": "169.254.169.24",
+		"status": "UP",
+		"port": {"$": "8080", "@enabled": "true"},
+		"securePort": {"$": "8443", "@enabled": "true"},
+		"healthCheckUrl": "http://WKS-SOF-L011:8080/healthcheck",
+		"statusPageUrl": "http://WKS-SOF-L011:8080/status",
+		"homePageUrl": "http://WKS-SOF-L011:8080",
+		"dataCenterInfo": {
+			"@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo", 
+			"name": "MyOwn"
+		}
+	}
+}
