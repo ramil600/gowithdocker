@@ -12,7 +12,11 @@ import (
 
 var heartBeatString = "http://localhost:8761/eureka/apps/vendor3/WKS-SOF-L011"
 
-func RegisterService() {
+
+
+
+
+func (i InstanceInfo )RegisterService() {
 
 	regbody := bytes.NewReader(parseTPL())
 	client := http.Client{}
@@ -30,6 +34,7 @@ func RegisterService() {
 	}
 
 	fmt.Println(res.Body)
+	fmt.Println ("Instance host name: ",i.HostName)
 }
 
 func getmyIPstr() string {
@@ -51,6 +56,22 @@ func getmyIPstr() string {
 	return ""
 }
 
+func GetNewInstance() *InstanceInfo {
+	var ins = RegistrationTicket{}
+	body := parseTPL()
+	err := json.Unmarshal(body, &ins)
+
+	if err != nil {
+		log.Fatal("Could not read the Registration Ticket")
+	}
+
+	newInstance := new(InstanceInfo)
+	newInstance = &ins.Instance
+	return newInstance
+
+
+}
+
 func parseTPL() []byte {
 	var myinstance RegistrationTicket
 	regtpl, err := os.ReadFile("reg_vendor.json")
@@ -66,14 +87,12 @@ func parseTPL() []byte {
 	if err != nil{
 		log.Fatal(err)
 	}
-
-
-
 	return regtpl
 
 }
 
-func SendHeartBeat() {
+
+func (i InstanceInfo) SendHeartBeat() {
 
 	// NOTE: %s/eureka/apps/SERVICENAME/192.168.1.49:SERVICENAME:9000
 	//fmt.Sprintf("%s/eureka/apps/%s/%s", s.EurekaService, s.RegistrationTicket.Instance.App, s.RegistrationTicket.Instance.InstanceId)
@@ -100,7 +119,7 @@ func SendHeartBeat() {
 
 }
 
-func ShutDown() {
+func (i InstanceInfo) ShutDown() {
 
 	client := http.Client{}
 	req, err := http.NewRequest("DELETE", heartBeatString, nil)

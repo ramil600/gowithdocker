@@ -1,15 +1,16 @@
 package main
 
 import (
-	
 	"time"
-	"github.com/ramil600/gowithdocker/serviceone/eurekautils"
+	"github.com/ramil600/gowithdocker/eurekautils"
 )
 
 func main() {	
-	eurekautils.RegisterService()
+	ins := eurekautils.GetNewInstance()
+	ins.RegisterService()
 	time.Sleep(10 * time.Second)
-	eurekautils.SendHeartBeat()
+	ins.SendHeartBeat()
 	time.Sleep(5 * time.Second)
-	eurekautils.ShutDown()
+	ins.ShutDown()
+	
 }
