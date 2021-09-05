@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-	"github.com/ramil600/gowithdocker/eurekautils"
+	"github.com/ramil600/gowithdocker/serviceone/eurekautils"
 )
 
 func main() {	
