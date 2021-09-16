@@ -1,7 +1,7 @@
 {
   "instance": {
     "hostName":"${ipAddress}",
-    "app":"vendor",
+    "app":"dispatcher",
     "ipAddr":"${ipAddress}",
     "vipAddress":"vendor",
     "status":"UP",

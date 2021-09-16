@@ -10,17 +10,28 @@ import (
 	"os"
 )
 
-var heartBeatString = "http://localhost:8761/eureka/apps/vendor3/WKS-SOF-L011"
-
+var heartBeatString = "http://discovery:8761/eureka/apps/dispatcher/"
+var registerServiceString = "http://discovery:8761/eureka/apps/dispatcher" 
 
 
 
 
 func (i InstanceInfo )RegisterService() {
 
-	regbody := bytes.NewReader(parseTPL())
+	
 	client := http.Client{}
-	req, err := http.NewRequest("POST", "http://localhost:8761/eureka/apps/vendor3", regbody)
+	ticket := RegistrationTicket{Instance: i}
+
+	ticketBody, err := json.Marshal(ticket)
+	fmt.Println("ticket body:")
+	fmt.Println(string(ticketBody))
+	regbody := bytes.NewReader(ticketBody)
+	if err != nil {
+		log.Fatal("Cannot unmarshal instance")
+	}
+	fmt.Println("Instance :", ticket.Instance)
+	fmt.Println("Ip Address:", ticket.Instance.HostName)
+	req, err := http.NewRequest("POST", registerServiceString, regbody)
 	req.Header.Add("Content-Type", "application/json")
 
 	if err != nil {
@@ -33,7 +44,7 @@ func (i InstanceInfo )RegisterService() {
 		log.Fatal("could not send request")
 	}
 
-	fmt.Println(res.Body)
+	fmt.Println("Response Status from eureka: ", res.Status)
 	fmt.Println ("Instance host name: ",i.HostName)
 }
 
@@ -64,6 +75,12 @@ func GetNewInstance() *InstanceInfo {
 	if err != nil {
 		log.Fatal("Could not read the Registration Ticket")
 	}
+
+	ins.Instance.HostName = getmyIPstr()
+	ins.Instance.IpAddr = ins.Instance.HostName
+	ins.Instance.HomePageUrl = "http://" + ins.Instance.IpAddr + ":8080"
+	ins.Instance.StatusPageUrl = ins.Instance.HomePageUrl + "/status"
+	ins.Instance.HealthCheckUrl = ins.Instance.HomePageUrl +"/healthcheck"
 
 	newInstance := new(InstanceInfo)
 	newInstance = &ins.Instance
@@ -97,11 +114,13 @@ func (i InstanceInfo) SendHeartBeat() {
 	// NOTE: %s/eureka/apps/SERVICENAME/192.168.1.49:SERVICENAME:9000
 	//fmt.Sprintf("%s/eureka/apps/%s/%s", s.EurekaService, s.RegistrationTicket.Instance.App, s.RegistrationTicket.Instance.InstanceId)
 	client := http.Client{}
-	//myIp := getmyIPstr()
+	
+	sendString := heartBeatString + i.InstanceID
 
-	fmt.Println(heartBeatString)
+	fmt.Println("Sending heartbeat string: ..." )
+	fmt.Println(sendString)
 
-	req, err := http.NewRequest("PUT", heartBeatString, nil)
+	req, err := http.NewRequest("PUT", sendString, nil)
 
 	if err != nil {
 		log.Fatal("Could not form request")

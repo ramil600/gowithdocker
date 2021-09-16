@@ -1,0 +1,1 @@
+method=GET status=200 uri=/pingmethod=GET status=404 uri=/favicon.ico

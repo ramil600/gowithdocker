@@ -12,3 +12,8 @@ func PingHandler(c echo.Context) error {
 	fmt.Println("Hello There!")
 	return c.String(http.StatusOK, "Pong!")
 }
+
+func IndexHandler(c echo.Context) error {
+	fmt.Println("Hello There!")
+	return c.String(http.StatusOK, "Good morning!")
+}
